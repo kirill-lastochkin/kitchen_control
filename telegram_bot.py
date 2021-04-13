@@ -22,17 +22,17 @@ class KitchenHelperBot:
 
     def start_cb(self, update, context):
         context.bot.sendMessage(chat_id=update.message.chat_id, text="Вышли мне свои рецепты. После этого я буду высылать тебе меню.")
-        context.bot.sendMessage(chat_id=update.message.chat_id, text="Напиши мне 'Menu' чтобы получить меню на неделю. На любое другое сообщение я выдам тебе случайный рецепт.")
+        context.bot.sendMessage(chat_id=update.message.chat_id, text="Напиши мне '/menu' чтобы получить меню на неделю. На любое другое сообщение я выдам тебе случайный рецепт.")
 
     def menu_cb(self, update, context):
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Высылаю меню!")
-        self.menu_action()
+        msg = context.bot.send_message(chat_id=update.effective_chat.id, text="Генерирую меню на неделю...")
+        menu_text = self.menu_action()
+        msg.edit_text(menu_text)
 
     def db_update_cb(self, update, context):
         file = context.bot.getFile(update.message.document.file_id)
         saved_filename = file.download(self.db_filename)
-        print("DB updated with file", saved_filename)
-        self.db_update_action()
+        self.db_update_action(saved_filename)
         context.bot.send_message(chat_id=update.effective_chat.id, text="Базу обновил, спасибо!")
 
     def non_command_cb(self, update, context):
@@ -59,7 +59,7 @@ class KitchenHelperBot:
             query.edit_message_text(text=f"Генерирую меню на день...")
             answer_text = self.random_day_menu_action()
 
-        context.bot.send_message(chat_id=update.effective_chat.id, text=answer_text)
+        query.edit_message_text(text=answer_text)
 
     def start(self):
         updater = Updater(token=bot_token.token())
@@ -85,9 +85,10 @@ if __name__ == '__main__':
 
     def menu_action():
         print("Menu is requested")
+        return "Monday: nothing\nTuesday: what is love"
 
-    def db_update_action():
-        print("DB update is called")
+    def db_update_action(db_file_path):
+        print("DB update is called with file:", db_file_path)
 
     def random_recipe_action():
         print("Generate recipe")
