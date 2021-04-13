@@ -9,8 +9,9 @@ from telegram.ext import MessageHandler
 from telegram.ext import Filters
 
 class KitchenHelperBot:
-    def __init__(self, db_filename):
+    def __init__(self, db_filename, db_file_ext="rtk"):
         self.db_filename = db_filename
+        self.db_file_ext = db_file_ext
 
     def start_cb(self, update, context):
         context.bot.sendMessage(chat_id=update.message.chat_id, text="Вышли мне свои рецепты. После этого я буду высылать тебе меню.")
@@ -21,7 +22,9 @@ class KitchenHelperBot:
 
     def db_update_cb(self, update, context):
         file = context.bot.getFile(update.message.document.file_id)
-        file.download(self.db_filename)
+        saved_filename = file.download(self.db_filename)
+        print("DB updated with file", saved_filename)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Базу обновил, спасибо!")
 
     def non_command_cb(self, update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="Высылаю случайный рецепт.")
@@ -33,7 +36,7 @@ class KitchenHelperBot:
         start_handler = CommandHandler('start', self.start_cb)
         menu_handler = CommandHandler('menu', self.menu_cb)
 
-        db_update_handler = MessageHandler(Filters.document, self.db_update_cb)
+        db_update_handler = MessageHandler(Filters.document.file_extension(self.db_file_ext), self.db_update_cb)
         non_command_handler = MessageHandler(Filters.text & (~Filters.command), self.non_command_cb)
 
         dispatcher.add_handler(start_handler)
