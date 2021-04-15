@@ -40,36 +40,40 @@ class KitchenHelperBot:
         context.bot.sendMessage(chat_id=update.message.chat_id, text=bm.hello())
         context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), reply_markup=reply_kb_markup)
 
-        user = update.message.from_user
-        self.actions['new_user'](user['id'])
+        user_id = update.message.from_user['id']
+        self.actions['new_user'](user_id)
 
     def menu_week_cb(self, update, context):
-        menu_text = self.actions['menu_week']()
+        user_id = update.message.from_user['id']
+        menu_text = self.actions['menu_week'](user_id)
         context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
 
     def menu_day_cb(self, update, context):
-        menu_text = self.actions['menu_day']()
+        user_id = update.message.from_user['id']
+        menu_text = self.actions['menu_day'](user_id)
         context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
-    
+
     def menu_dish_cb(self, update, context):
-        menu_text = self.actions['menu_dish']()
+        user_id = update.message.from_user['id']
+        menu_text = self.actions['menu_dish'](user_id)
         context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
-    
+
     def db_update_cb(self, update, context):
+        user_id = update.message.from_user['id']
         file = context.bot.getFile(update.message.document.file_id)
         saved_filename = file.download(self.db_filename)
-        self.actions['db_update'](saved_filename)
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Базу обновил, спасибо!")
+        self.actions['db_update'](saved_filename, user_id)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_updated())
 
     def help_cb(self, update, context):
         context.bot.send_message(chat_id=update.message.chat_id, text=bm.help())
 
 
 if __name__ == '__main__':
-    actions = { 'menu_week': lambda: "Empty week menu",
-                'menu_day': lambda: "Empty day menu",
-                'menu_dish': lambda: "Empty dish",
-                'db_update': lambda db_file_path: print("DB updated:", db_file_path),
+    actions = { 'menu_week': lambda user_id: "Empty week menu",
+                'menu_day': lambda user_id: "Empty day menu",
+                'menu_dish': lambda user_id: "Empty dish",
+                'db_update': lambda db_file_path, user_id: print("DB updated:", db_file_path),
                 'new_user': lambda user_id: print("New user with ID:", user_id) }
 
     default_db_filename = './updated_db.zip'
