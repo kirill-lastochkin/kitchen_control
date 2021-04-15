@@ -38,17 +38,19 @@ class KitchenHelper:
         self.db_update_path = update_dir + "update.zip"
         self.users_dir = "./users/"
         self.logs_dir = "./logs/"
+        self.db_dir = "./db/"
 
         self.init_dir(update_dir)
         self.init_dir(self.users_dir)
         self.init_dir(self.logs_dir)
+        self.init_dir(self.db_dir)
 
     def init_dir(self, directory):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
     def init_db(self):
-        DbMaintainer().init("./")
+        DbMaintainer().init(self.db_dir)
 
     def init_bot(self):
         actions = { 'menu_week': self.create_menu_week,
