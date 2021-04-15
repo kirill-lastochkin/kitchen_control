@@ -131,3 +131,7 @@ dmypy.json
 # other
 *.zip
 bot_token.py
+db/
+logs/
+updates/
+users/
