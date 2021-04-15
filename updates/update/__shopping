@@ -1,0 +1,213 @@
+[
+    {
+        "lastModifiedDate": 0,
+        "shoppingListItems": [
+            {
+                "checked": true,
+                "position": 4,
+                "shoppingListId": 1,
+                "title": "Киви – 500 г"
+            },
+            {
+                "checked": true,
+                "position": 14,
+                "shoppingListId": 1,
+                "title": "Сливки – 120 г"
+            },
+            {
+                "checked": true,
+                "position": 22,
+                "shoppingListId": 1,
+                "title": "Шоколад белый – 160 г"
+            },
+            {
+                "checked": true,
+                "position": 3,
+                "shoppingListId": 1,
+                "title": "Йогурт – 200 г натуральный"
+            },
+            {
+                "checked": true,
+                "position": 23,
+                "shoppingListId": 1,
+                "title": "Шоколад черный – 20 г"
+            },
+            {
+                "checked": true,
+                "position": 1,
+                "shoppingListId": 1,
+                "title": "Ветчина – 200 г"
+            },
+            {
+                "checked": true,
+                "position": 5,
+                "shoppingListId": 1,
+                "title": "Кукуруза – 200 г консервированная"
+            },
+            {
+                "checked": true,
+                "position": 10,
+                "shoppingListId": 1,
+                "title": "Морковь – 200 г по-корейски"
+            },
+            {
+                "checked": true,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Ананас – 200 г консервированный"
+            },
+            {
+                "checked": true,
+                "position": 8,
+                "shoppingListId": 1,
+                "title": "Майонез – 3 ст.л. (3-4)"
+            },
+            {
+                "checked": true,
+                "position": 13,
+                "shoppingListId": 1,
+                "title": "Свекла – 3 шт."
+            },
+            {
+                "checked": true,
+                "position": 11,
+                "shoppingListId": 1,
+                "title": "Морковь – 3 шт."
+            },
+            {
+                "checked": true,
+                "position": 18,
+                "shoppingListId": 1,
+                "title": "Сыр твердый – 200 г"
+            },
+            {
+                "checked": true,
+                "position": 21,
+                "shoppingListId": 1,
+                "title": "Чеснок – 3 зуб."
+            },
+            {
+                "checked": true,
+                "position": 2,
+                "shoppingListId": 1,
+                "title": "Изюм – 150 г"
+            },
+            {
+                "checked": true,
+                "position": 7,
+                "shoppingListId": 1,
+                "title": "Майонез – 200 г"
+            },
+            {
+                "checked": true,
+                "position": 24,
+                "shoppingListId": 1,
+                "title": "Яблоко – 2 шт."
+            },
+            {
+                "checked": true,
+                "position": 19,
+                "shoppingListId": 1,
+                "title": "Сыр твердый – 250 г"
+            },
+            {
+                "checked": true,
+                "position": 6,
+                "shoppingListId": 1,
+                "title": "Лук репчатый – 1 шт."
+            },
+            {
+                "checked": true,
+                "position": 25,
+                "shoppingListId": 1,
+                "title": "Яйцо куриное – 4 шт."
+            },
+            {
+                "checked": true,
+                "position": 9,
+                "shoppingListId": 1,
+                "title": "Майонез – по вкусу"
+            },
+            {
+                "checked": true,
+                "position": 20,
+                "shoppingListId": 1,
+                "title": "Уксус – 2 ч.л. яблочный"
+            },
+            {
+                "checked": true,
+                "position": 12,
+                "shoppingListId": 1,
+                "title": "Сахар – 1 ч.л."
+            },
+            {
+                "checked": true,
+                "position": 16,
+                "shoppingListId": 1,
+                "title": "Соль – по вкусу"
+            },
+            {
+                "checked": true,
+                "position": 15,
+                "shoppingListId": 1,
+                "title": "Сок лимонный – по желанию"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Колбаса докторская"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Морковка"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Грудка куриная – 4 шт."
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Горчица зерновая – 4 ч.л."
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Бекон – 20 ломтиков"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Ветчина – 200 г"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Морковь – 200 г по-корейски"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Киви – 500 г"
+            },
+            {
+                "checked": false,
+                "position": 0,
+                "shoppingListId": 1,
+                "title": "Йогурт – 200 г натуральный"
+            }
+        ],
+        "title": "Мой список покупок",
+        "uuid": "170310e0-ec32-4484-aea5-9cc93719da4c"
+    }
+]
