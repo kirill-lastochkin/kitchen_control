@@ -26,6 +26,7 @@ class KitchenHelper:
 
     def get_dish(self, user_id):
         print("Random dish requested for user", user_id)
+        print(self.db_maintainer.get_random_recipe(user_id))
         return MenuGenerator().generate_dish(user_id)
 
     def process_db_update(self, db_filename, user_id):

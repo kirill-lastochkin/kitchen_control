@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import random
 
 class DbMaintainer:
     def __init__(self, db_dir):
@@ -19,6 +20,23 @@ class DbMaintainer:
                               pictures text, user integer)""")
             cursor.execute("CREATE TABLE recipe_to_tags (recipe integer, tag integer)")
             conn.commit()
+
+    def get_random_recipe(self, user_id):
+        random.seed()
+        with sqlite3.connect(self.name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
+            recipe_tags = cursor.fetchall()
+            random_recipe_id = random.choice(recipe_tags)
+            cursor.execute("SELECT * FROM recipes WHERE id = ?", random_recipe_id)
+            return cursor.fetchall()
+
+    def get_by_tags(self, tags, user_id):
+        with sqlite3.connect(self.name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM tags WHERE user = :id", {"id": user_id})
+            tags_to_remove = cursor.fetchall()
+
 
     def update_db(self, data, user_id):
         self.clean_db_for_user(user_id)
