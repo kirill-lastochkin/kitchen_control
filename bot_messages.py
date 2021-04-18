@@ -11,4 +11,16 @@ def help():
 /menu_dish - выслать случайный рецепт\n"
 
 def db_updated():
-	return "Базу обновил, спасибо!"
+    return "Базу обновил, спасибо!"
+
+def db_update_fail(error):
+    return "Ошибка обновления базы: " + error
+
+def err_no_categories():
+    return "Не создано ни одной категории"
+
+def err_no_tags():
+    return "Не создано ни одного тега"
+
+def err_no_recipes():
+    return "Нет файла рецептов"

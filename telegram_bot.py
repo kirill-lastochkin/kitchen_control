@@ -62,8 +62,11 @@ class KitchenHelperBot:
         user_id = update.message.from_user['id']
         file = context.bot.getFile(update.message.document.file_id)
         saved_filename = file.download(self.db_filename)
-        self.actions['db_update'](saved_filename, user_id)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_updated())
+        result = self.actions['db_update'](saved_filename, user_id)
+        if result["result"]:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_updated())
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_update_fail(result["error"]))
 
     def help_cb(self, update, context):
         context.bot.send_message(chat_id=update.message.chat_id, text=bm.help())
