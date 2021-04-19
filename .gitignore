@@ -131,6 +131,7 @@ dmypy.json
 # other
 *.zip
 bot_token.py
+admin_data.py
 db/
 logs/
 updates/

@@ -6,10 +6,10 @@ class MenuGenerator:
         self.max_menu_part_len = 3000
 
     def generate_menu_week(self, user_id):
-        return "Empty week menu"
+        return ("Empty week menu", )
 
     def generate_menu_day(self, user_id):
-        return "Empty day menu"
+        return ("Empty day menu", )
 
     def generate_dish(self, user_id):
         recipe = self.db_maintainer.get_random_recipe(user_id)

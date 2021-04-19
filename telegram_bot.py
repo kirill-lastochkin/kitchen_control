@@ -1,5 +1,8 @@
 import bot_token
 import bot_messages as bm
+import time
+import sys
+import threading
 
 from telegram.ext import Updater
 from telegram.ext import CommandHandler, CallbackQueryHandler
@@ -15,19 +18,24 @@ class KitchenHelperBot:
         self.actions = actions
 
     def start(self):
-        updater = Updater(token=bot_token.token())
-        dispatcher = updater.dispatcher
+        self.updater = Updater(token=bot_token.token())
+        dispatcher = self.updater.dispatcher
 
         dispatcher.add_handler(CommandHandler('start', self.start_cb))
         dispatcher.add_handler(CommandHandler('menu_week', self.menu_week_cb))
         dispatcher.add_handler(CommandHandler('menu_day', self.menu_day_cb))
         dispatcher.add_handler(CommandHandler('menu_dish', self.menu_dish_cb))
         dispatcher.add_handler(CommandHandler('help', self.help_cb))
+        dispatcher.add_handler(CommandHandler('kill', self.kill_cb))
 
         dispatcher.add_handler(MessageHandler(Filters.document.file_extension(self.db_file_ext), self.db_update_cb))
         dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), self.help_cb))
 
-        updater.start_polling()
+        self.updater.start_polling()
+
+    def stop(self):
+        self.updater.stop()
+        self.updater.is_idle = False
 
     def start_cb(self, update, context):
         main_menu_keyboard = [KeyboardButton('/menu_week'),
@@ -76,6 +84,23 @@ class KitchenHelperBot:
 
     def help_cb(self, update, context):
         context.bot.send_message(chat_id=update.message.chat_id, text=bm.help())
+
+    def kill_cb(self, update, context):
+        print("Got kill command!")
+        try:
+            from admin_data import kill_password
+            password = context.args[0]
+            if password != kill_password():
+                return
+        except:
+            return
+
+        context.bot.send_message(chat_id=update.message.chat_id, text="No!")
+        time.sleep(1)
+        context.bot.send_message(chat_id=update.message.chat_id, text="No, please!")
+        time.sleep(1)
+        context.bot.send_message(chat_id=update.message.chat_id, text="Bot was executed.")
+        threading.Thread(target=self.stop).start()
 
 
 if __name__ == '__main__':
