@@ -14,7 +14,9 @@ class MenuGenerator:
     def generate_dish(self, user_id):
         recipe = self.db_maintainer.get_random_recipe(user_id)
         title_part = self.get_recipe_full_desc(recipe)
-        return self.split_if_long_message(title_part) + self.split_if_long_message(recipe["instruction"])
+        result = self.split_if_long_message(title_part)
+        if recipe["instruction"]: result += self.split_if_long_message(recipe["instruction"])
+        return result
 
     def get_recipe_short_desc(self, recipe):
         description = recipe["title"] + '\n'
@@ -25,7 +27,7 @@ class MenuGenerator:
         description = recipe["title"] + '\n'
         if recipe["cooking_time"]: description += bm.cooking_time(recipe["cooking_time"])
         if recipe["portions"]: description += bm.portions(recipe["portions"])
-        description += bm.ingridients(recipe["ingridients"])
+        if recipe["ingridients"]: description += bm.ingridients(recipe["ingridients"])
         if recipe["url"]: description += recipe["url"] + '\n'
         return description
 

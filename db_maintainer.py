@@ -146,6 +146,9 @@ class DbMaintainer:
 
                 recipe_id = cursor.lastrowid
 
+                if not recipe["tags"]:
+                    continue
+
                 for tag_name in recipe["tags"]:
                     for tag_db in tags:
                         if tag_name == tag_db["name"]:

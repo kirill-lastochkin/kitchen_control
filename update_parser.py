@@ -59,17 +59,28 @@ def parse_recipes(update_dir):
                 recipe_dict = {}
 
                 try:
+                    recipe_dict["name"] = recipe["title"]
+                    recipe_dict["category"] = recipe["categories"][0]["title"]
+                except (KeyError, IndexError):
+                    continue
+
+                if "tags" in recipe:
                     tags = []
                     for tag in recipe["tags"]:
                         tags.append(tag["title"])
-
-                    recipe_dict["name"] = recipe["title"]
-                    recipe_dict["category"] = recipe["categories"][0]["title"]
                     recipe_dict["tags"] = tags
+                else:
+                    recipe_dict["tags"] = None
+
+                if "ingredients" in recipe:
                     recipe_dict["ingredients"] = recipe["ingredients"]
+                else:
+                    recipe_dict["ingredients"] = None
+
+                if "instructions" in recipe:
                     recipe_dict["instructions"] = recipe["instructions"]
-                except (KeyError, IndexError):
-                    continue
+                else:
+                    recipe_dict["instructions"] = None
 
                 if "pictures" in recipe:
                     pictures = ""
