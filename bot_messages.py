@@ -29,7 +29,7 @@ def cooking_time(arg):
 	return "Время приготовления: " + arg + '\n'
 
 def portions(arg):
-	return "Количество порций: " + arg + '\n'
+	return "Количество: " + arg + '\n'
 
 def ingridients(arg):
 	return "Ингридиенты:\n" + arg + '\n'

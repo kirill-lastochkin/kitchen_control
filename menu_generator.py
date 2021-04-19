@@ -13,22 +13,32 @@ class MenuGenerator:
 
     def generate_dish(self, user_id):
         recipe = self.db_maintainer.get_random_recipe(user_id)
-        title_part = recipe["title"] + '\n'
-        if recipe["cooking_time"]: title_part += bm.cooking_time(recipe["cooking_time"])
-        if recipe["portions"]: title_part += bm.portions(recipe["portions"])
-        title_part += bm.ingridients(recipe["ingridients"])
-        if recipe["url"]: title_part += recipe["url"] + '\n'
+        title_part = self.get_recipe_full_desc(recipe)
+        return self.split_if_long_message(title_part) + self.split_if_long_message(recipe["instruction"])
 
-        result = [title_part,]
+    def get_recipe_short_desc(self, recipe):
+        description = recipe["title"] + '\n'
+        description += bm.ingridients(recipe["ingridients"])
+        return description
 
-        instruct_part = recipe["instruction"]
-        instruct_part_len = len(instruct_part)
-        if instruct_part_len > self.max_menu_part_len:
+    def get_recipe_full_desc(self, recipe):
+        description = recipe["title"] + '\n'
+        if recipe["cooking_time"]: description += bm.cooking_time(recipe["cooking_time"])
+        if recipe["portions"]: description += bm.portions(recipe["portions"])
+        description += bm.ingridients(recipe["ingridients"])
+        if recipe["url"]: description += recipe["url"] + '\n'
+        return description
+
+    def split_if_long_message(self, message):
+        result = []
+        message_len = len(message)
+
+        if message_len > self.max_menu_part_len:
             processed_len = 0
-            while processed_len < instruct_part_len:
-                result.append(instruct_part[processed_len : processed_len + self.max_menu_part_len])
+            while processed_len < message_len:
+                result.append(message[processed_len : processed_len + self.max_menu_part_len])
                 processed_len += self.max_menu_part_len
         else:
-            result.append(instruct_part)
+            result.append(message)
 
         return result
