@@ -45,18 +45,24 @@ class KitchenHelperBot:
 
     def menu_week_cb(self, update, context):
         user_id = update.message.from_user['id']
-        menu_text = self.actions['menu_week'](user_id)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
+        menu_parts = self.actions['menu_week'](user_id)
+
+        for part in menu_parts:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
     def menu_day_cb(self, update, context):
         user_id = update.message.from_user['id']
-        menu_text = self.actions['menu_day'](user_id)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
+        menu_parts = self.actions['menu_day'](user_id)
+
+        for part in menu_parts:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
     def menu_dish_cb(self, update, context):
         user_id = update.message.from_user['id']
-        menu_text = self.actions['menu_dish'](user_id)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=menu_text)
+        menu_parts = self.actions['menu_dish'](user_id)
+
+        for part in menu_parts:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
     def db_update_cb(self, update, context):
         user_id = update.message.from_user['id']

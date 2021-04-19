@@ -28,8 +28,16 @@ class DbMaintainer:
             cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
             recipe_tags = cursor.fetchall()
             random_recipe_id = random.choice(recipe_tags)
-            cursor.execute("SELECT * FROM recipes WHERE id = ?", random_recipe_id)
-            return cursor.fetchall()
+
+            cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ?", random_recipe_id)
+            title, ingridients, cooking_time, instruction, portions, url = cursor.fetchall().pop()
+
+            return { "title": title,
+                     "ingridients": ingridients,
+                     "cooking_time": cooking_time,
+                     "instruction": instruction,
+                     "portions": portions,
+                     "url": url }
 
     def get_by_tags(self, tags, user_id):
         with sqlite3.connect(self.name) as conn:

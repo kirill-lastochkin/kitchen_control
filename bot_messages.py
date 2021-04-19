@@ -24,3 +24,12 @@ def err_no_tags():
 
 def err_no_recipes():
     return "Нет файла рецептов"
+
+def cooking_time(arg):
+	return "Время приготовления: " + arg + '\n'
+
+def portions(arg):
+	return "Количество порций: " + arg + '\n'
+
+def ingridients(arg):
+	return "Ингридиенты:\n" + arg + '\n'

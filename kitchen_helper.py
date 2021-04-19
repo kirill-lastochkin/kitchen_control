@@ -11,6 +11,7 @@ class KitchenHelper:
     def __init__(self):
         self.init_dirs()
         self.init_db()
+        self.init_menu_generator()
         self.init_bot()
 
     def start(self):
@@ -18,16 +19,15 @@ class KitchenHelper:
 
     def create_menu_week(self, user_id):
         print("Random week menu requested for user", user_id)
-        return MenuGenerator().generate_menu_week(user_id)
+        return self.menu_generator.generate_menu_week(user_id)
 
     def create_menu_day(self, user_id):
         print("Random day menu requested for user", user_id)
-        return MenuGenerator().generate_menu_day(user_id)
+        return self.menu_generator.generate_menu_day(user_id)
 
     def get_dish(self, user_id):
         print("Random dish requested for user", user_id)
-        print(self.db_maintainer.get_random_recipe(user_id))
-        return MenuGenerator().generate_dish(user_id)
+        return self.menu_generator.generate_dish(user_id)
 
     def process_db_update(self, db_filename, user_id):
         print("DB update requested for user", user_id)
@@ -80,6 +80,9 @@ class KitchenHelper:
 
     def init_db(self):
         self.db_maintainer = DbMaintainer(self.db_dir)
+
+    def init_menu_generator(self):
+        self.menu_generator = MenuGenerator(self.db_maintainer)
 
     def user_dir(self, user_id):
         return self.users_dir + str(user_id) + '/'
