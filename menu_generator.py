@@ -1,5 +1,6 @@
 import bot_messages as bm
 import json
+import random
 
 class MenuGenerator:
     def __init__(self, db_maintainer):
@@ -11,13 +12,39 @@ class MenuGenerator:
             config = json.load(json_file)
             days = config["days"]
 
-            menu = {}
+            menu_week = []
+            day_idx = 0
 
             for day in days:
                 recipes = day["recipes"]
-                if "empty" in recipes:
-                    continue
+                recipe_idx = 0
+                menu_day = []
+                for recipe in recipes:
+                    if "empty" in recipe:
+                        continue
 
+                    if "repeat" in recipe:
+                        # todo read prev recipe
+                        if recipe_idx == 0: continue
+                        continue
+
+                    category = recipe["category"]
+                    tags = recipe["tags"]
+
+                    candidate_recipes = self.db_maintainer.get_filtered(tags, category, user_id)
+                    random.seed()
+                    chosen_recipe = random.choice(candidate_recipes)
+
+                    menu_day.append(chosen_recipe)
+
+                    #exclude from prev week menu
+
+                    recipe_idx += 1
+
+                menu_week.append(menu_day)
+                day_idx += 1
+
+        print(menu_week)
 
         return ("Empty week menu", )
 

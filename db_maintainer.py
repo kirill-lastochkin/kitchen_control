@@ -58,9 +58,10 @@ class DbMaintainer:
                 try:
                     title, ingridients, cooking_time, instruction, portions, url = cursor.fetchall().pop()
                     matched_recipes.append({ "title": title,
+                                             "id": recipe_id,
                                              "ingridients": ingridients,
                                              "cooking_time": cooking_time,
-                                             "instruction": instruction,
+                                             #"instruction": instruction,
                                              "portions": portions,
                                              "url": url })
                 except IndexError:
