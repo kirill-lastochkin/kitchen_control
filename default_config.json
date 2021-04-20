@@ -1,0 +1,193 @@
+{
+	"days": [
+		{
+			"recipes": [
+				{
+					"category": "Супы",
+					"tags": []
+				},
+				{
+					"empty": true
+				},
+				{
+					"category": "Мясное",
+					"tags": [
+						"курица"
+					]
+				},
+				{
+					"category": "Гарнир",
+					"tags": []
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"repeat": true
+				},
+				{
+					"repeat": true
+				},
+				{
+					"repeat": true
+				},
+				{
+					"repeat": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"category": "Супы",
+					"tags": []
+				},
+				{
+					"empty": true
+				},
+				{
+					"category": "Выпечка несладкая",
+					"tags": [
+						"овощи"
+					]
+				},
+				{
+					"empty": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"repeat": true
+				},
+				{
+					"empty": true
+				},
+				{
+					"category": "Мясное",
+					"tags": [
+						"рыба"
+					]
+				},
+				{
+					"category": "Гарнир",
+					"tags": []
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"category": "Супы",
+					"tags": [
+						""
+					]
+				},
+				{
+					"empty": true
+				},
+				{
+					"repeat": true
+				},
+				{
+					"repeat": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"repeat": true
+				},
+				{
+					"empty": true
+				},
+				{
+					"category": "Вторые блюда",
+					"tags": []
+				},
+				{
+					"empty": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"category": "Супы",
+					"tags": [
+						"фрикадельки"
+					]
+				},
+				{
+					"empty": true
+				},
+				{
+					"repeat": true
+				},
+				{
+					"empty": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"repeat": true
+				},
+				{
+					"empty": true
+				},
+				{
+					"category": "Запеканка",
+					"tags": []
+				},
+				{
+					"empty": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"category": "Гарнир",
+					"tags": []
+				},
+				{
+					"category": "Салаты",
+					"tags": [
+						"курица"
+					]
+				},
+				{
+					"category": "Выпечка сладкая",
+					"tags": [
+						"фрукты"
+					]
+				},
+				{
+					"empty": true
+				}
+			]
+		},
+		{
+			"recipes": [
+				{
+					"repeat": true
+				},
+				{
+					"repeat": true
+				},
+				{
+					"category": "Каша",
+					"tags": []
+				},
+				{
+					"empty": true
+				}
+			]
+		}
+	]
+}
