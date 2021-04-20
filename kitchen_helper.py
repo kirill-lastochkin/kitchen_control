@@ -19,7 +19,7 @@ class KitchenHelper:
 
     def create_menu_week(self, user_id):
         print("Random week menu requested for user", user_id)
-        return self.menu_generator.generate_menu_week(user_id)
+        return self.menu_generator.generate_menu_week(user_id, self.user_dir(user_id) + self.menu_generator_config)
 
     def create_menu_day(self, user_id):
         print("Random day menu requested for user", user_id)
@@ -62,6 +62,9 @@ class KitchenHelper:
         print("User started with ID =", user_id)
         self.init_dir(self.users_dir + str(user_id))
 
+        default_config_file = "default_config.json"
+        shutil.copy2(default_config_file, self.user_dir(user_id) + self.menu_generator_config)
+
     def init_dirs(self):
         update_dir = "./updates/"
         self.db_update_path = update_dir + "update.zip"
@@ -83,6 +86,7 @@ class KitchenHelper:
 
     def init_menu_generator(self):
         self.menu_generator = MenuGenerator(self.db_maintainer)
+        self.menu_generator_config = "config.json"
 
     def user_dir(self, user_id):
         return self.users_dir + str(user_id) + '/'

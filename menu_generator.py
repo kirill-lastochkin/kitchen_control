@@ -1,11 +1,24 @@
 import bot_messages as bm
+import json
 
 class MenuGenerator:
     def __init__(self, db_maintainer):
         self.db_maintainer = db_maintainer
         self.max_menu_part_len = 3000
 
-    def generate_menu_week(self, user_id):
+    def generate_menu_week(self, user_id, config_file):
+        with open(config_file, 'r', encoding='utf-8') as json_file:
+            config = json.load(json_file)
+            days = config["days"]
+
+            menu = {}
+
+            for day in days:
+                recipes = day["recipes"]
+                if "empty" in recipes:
+                    continue
+
+
         return ("Empty week menu", )
 
     def generate_menu_day(self, user_id):
