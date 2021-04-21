@@ -19,7 +19,7 @@ class KitchenHelper:
 
     def create_menu_week(self, user_id):
         print("Random week menu requested for user", user_id)
-        return self.menu_generator.generate_menu_week(user_id, self.user_dir(user_id) + self.menu_generator_config)
+        return self.menu_generator.generate_menu_week(user_id, self.user_dir(user_id), self.menu_generator_config)
 
     def create_menu_day(self, user_id):
         print("Random day menu requested for user", user_id)

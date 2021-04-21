@@ -81,9 +81,7 @@
 			"recipes": [
 				{
 					"category": "Супы",
-					"tags": [
-						""
-					]
+					"tags": []
 				},
 				{
 					"empty": true

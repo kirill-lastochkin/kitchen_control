@@ -92,8 +92,6 @@ class DbMaintainer:
         for r in results:
             tag_ids.append(r[0])
 
-        print(tag_ids)
-
         return tag_ids
 
     def get_category_id_by_name(self, category, user_id, cursor):

@@ -95,10 +95,10 @@ class KitchenHelperBot:
         except:
             return
 
-        context.bot.send_message(chat_id=update.message.chat_id, text="No!")
-        time.sleep(1)
-        context.bot.send_message(chat_id=update.message.chat_id, text="No, please!")
-        time.sleep(1)
+        #context.bot.send_message(chat_id=update.message.chat_id, text="No!")
+        #time.sleep(1)
+        #context.bot.send_message(chat_id=update.message.chat_id, text="No, please!")
+        #time.sleep(1)
         context.bot.send_message(chat_id=update.message.chat_id, text="Bot was executed.")
         threading.Thread(target=self.stop).start()
 
