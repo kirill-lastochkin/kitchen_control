@@ -10,11 +10,11 @@ class MenuGenerator:
         self.last_menu_file = "last_menu.json"
 
     def generate_menu_week(self, user_id, working_dir, config_file):
+        menu_week = []
         with open(working_dir + config_file, 'r', encoding='utf-8') as json_file:
             config = json.load(json_file)
             days = config["days"]
             used_recipes = self.last_menu_used_recipes(working_dir + self.last_menu_file)
-            menu_week = []
             day_idx = 0
 
             for day in days:
@@ -59,15 +59,36 @@ class MenuGenerator:
                 menu_week.append(menu_day)
                 day_idx += 1
 
-        json_view = json.dumps(menu_week, ensure_ascii=False).encode('utf8')
-        loaded = json.loads(json_view)
-
         with open(working_dir + self.last_menu_file, 'w', encoding='utf-8') as out:
-            out.write(json.dumps(loaded, indent=4, sort_keys=True, ensure_ascii=False))
+            out.write(json.dumps(menu_week, indent=4, sort_keys=True, ensure_ascii=False))
 
-        
+        message_set = []
+        day_idx = 1
+        for day in menu_week:
+            message = bm.day(day_idx)
+            day_idx += 1
+            recipe_idx = 1
 
-        return ("Empty week menu", )
+            for recipe in day:
+                if "empty" in recipe:
+                    continue
+
+                message += bm.dish(recipe_idx)
+                recipe_idx += 1
+
+                name = recipe["title"]
+                if "repeat" in recipe:
+                    message += bm.repeating_dish(name) + '\n'
+                    continue
+
+                message += bm.italic(name) + '\n\n'
+                if recipe["ingridients"]: message += recipe["ingridients"] + '\n'
+                if recipe["url"]: message += recipe["url"] + '\n'
+                message += '\n'
+
+            message_set.append(message)
+
+        return message_set
 
     def generate_menu_day(self, user_id):
         return ("Empty day menu", )

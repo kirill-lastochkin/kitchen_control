@@ -9,7 +9,7 @@ from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram.ext import MessageHandler
 from telegram.ext import Filters
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, ReplyKeyboardMarkup, KeyboardButton, ParseMode
 
 class KitchenHelperBot:
     def __init__(self, actions, db_filename, db_file_ext="rtk"):
@@ -56,7 +56,7 @@ class KitchenHelperBot:
         menu_parts = self.actions['menu_week'](user_id)
 
         for part in menu_parts:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.MARKDOWN)
 
     def menu_day_cb(self, update, context):
         user_id = update.message.from_user['id']

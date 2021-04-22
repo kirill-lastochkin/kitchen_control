@@ -33,3 +33,18 @@ def portions(arg):
 
 def ingridients(arg):
 	return "Ингридиенты:\n" + arg + '\n'
+
+def day(number):
+    return bold("День {}\n".format(number))
+
+def dish(number):
+    return bold("Блюдо №{}\n".format(number))
+
+def repeating_dish(dish):
+    return "Вчерашнее: {}\n".format(dish)
+
+def bold(text):
+    return "*{}*".format(text)
+
+def italic(text):
+    return "_{}_".format(text)
