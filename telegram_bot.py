@@ -23,7 +23,6 @@ class KitchenHelperBot:
 
         dispatcher.add_handler(CommandHandler('start', self.start_cb))
         dispatcher.add_handler(CommandHandler('menu_week', self.menu_week_cb))
-        dispatcher.add_handler(CommandHandler('menu_day', self.menu_day_cb))
         dispatcher.add_handler(CommandHandler('menu_dish', self.menu_dish_cb))
         dispatcher.add_handler(CommandHandler('help', self.help_cb))
         dispatcher.add_handler(CommandHandler('kill', self.kill_cb))
@@ -39,7 +38,6 @@ class KitchenHelperBot:
 
     def start_cb(self, update, context):
         main_menu_keyboard = [KeyboardButton('/menu_week'),
-                              KeyboardButton('/menu_day'),
                               KeyboardButton('/menu_dish'),
                               KeyboardButton('/help')]
 
@@ -57,13 +55,6 @@ class KitchenHelperBot:
 
         for part in menu_parts:
             context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.HTML)
-
-    def menu_day_cb(self, update, context):
-        user_id = update.message.from_user['id']
-        menu_parts = self.actions['menu_day'](user_id)
-
-        for part in menu_parts:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
     def menu_dish_cb(self, update, context):
         user_id = update.message.from_user['id']
@@ -105,7 +96,6 @@ class KitchenHelperBot:
 
 if __name__ == '__main__':
     actions = { 'menu_week': lambda user_id: "Empty week menu",
-                'menu_day': lambda user_id: "Empty day menu",
                 'menu_dish': lambda user_id: "Empty dish",
                 'db_update': lambda db_file_path, user_id: print("DB updated:", db_file_path),
                 'new_user': lambda user_id: print("New user with ID:", user_id) }

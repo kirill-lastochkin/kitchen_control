@@ -45,21 +45,13 @@ class DbMaintainer:
         with sqlite3.connect(self.name) as conn:
             cursor = conn.cursor()
 
+            recipe_ids = self.get_recipe_ids(tags, user_id, cursor)
             category_id = self.get_category_id_by_name(category, user_id, cursor)
-            recipe_ids = []
-
-            if tags:
-                tag_ids = self.get_tag_ids_by_name(tags, user_id, cursor)
-                recipe_ids = self.get_recipe_ids_by_tags(tag_ids, cursor)
-            else:
-                cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
-                for r in cursor.fetchall():
-                    recipe_ids.append(r[0])
+            
+            if not category_id or not recipe_ids:
+                return []
 
             matched_recipes = []
-            if not category_id or not recipe_ids:
-                return matched_recipes
-
             for recipe_id in recipe_ids:
                 cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ? AND category = ?", (recipe_id, category_id))
                 try:
@@ -75,6 +67,19 @@ class DbMaintainer:
                     continue
 
             return matched_recipes
+
+    def get_recipe_ids(self, tags, user_id, cursor):
+        recipe_ids = []
+
+        if tags:
+            tag_ids = self.get_tag_ids_by_name(tags, user_id, cursor)
+            recipe_ids = self.get_recipe_ids_by_tags(tag_ids, cursor)
+        else:
+            cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
+            for r in cursor.fetchall():
+                recipe_ids.append(r[0])
+
+        return recipe_ids
 
     def get_tag_ids_by_name(self, tags, user_id, cursor):
         sql_args = [user_id, ]
@@ -100,13 +105,6 @@ class DbMaintainer:
 
         return tag_ids
 
-    def get_category_id_by_name(self, category, user_id, cursor):
-        cursor.execute("SELECT id FROM categories WHERE user = ? AND category = ?", (user_id, category))
-        try:
-            return cursor.fetchall()[0][0]
-        except IndexError:
-            return None
-
     def get_recipe_ids_by_tags(self, tag_ids, cursor):
         recipe_ids = []
         for tag in tag_ids:
@@ -116,6 +114,13 @@ class DbMaintainer:
                 recipe_ids.append(r[0])
 
         return list(set(recipe_ids))
+
+    def get_category_id_by_name(self, category, user_id, cursor):
+        cursor.execute("SELECT id FROM categories WHERE user = ? AND category = ?", (user_id, category))
+        try:
+            return cursor.fetchall()[0][0]
+        except IndexError:
+            return None
 
     def update_db(self, data, user_id):
         self.clean_db_for_user(user_id)
@@ -127,20 +132,23 @@ class DbMaintainer:
         with sqlite3.connect(self.name) as conn:
             cursor = conn.cursor()
 
+            # fill categories table
             for category in categories:
                 cursor.execute("INSERT INTO categories (category, user) VALUES (?, ?)", (category["name"], user_id))
                 category["id"] = cursor.lastrowid
 
+            # fill tags table
             for tag in tags:
                 cursor.execute("INSERT INTO tags (tag, user) VALUES (?, ?)", (tag["name"], user_id))
                 tag["id"] = cursor.lastrowid
 
+            # fill recipes table
             for recipe in recipes:
-                category_name = recipe["category"]
-                category_id = -1
 
+                # find category ID
+                category_id = None
                 for category in categories:
-                    if category_name == category["name"]:
+                    if recipe["category"] == category["name"]:
                         category_id = category["id"]
                         break
 
@@ -151,9 +159,11 @@ class DbMaintainer:
 
                 recipe_id = cursor.lastrowid
 
+                # empty tags list for recipe is allowed
                 if not recipe["tags"]:
                     continue
 
+                # fill recipe_to_tags map
                 for tag_name in recipe["tags"]:
                     for tag_db in tags:
                         if tag_name == tag_db["name"]:
@@ -172,11 +182,8 @@ class DbMaintainer:
 
             if tags_to_remove:
                 cursor.executemany("DELETE FROM recipe_to_tags WHERE tag = ?", tags_to_remove)
+
             cursor.execute("DELETE FROM categories WHERE user = :id", {"id": user_id})
             cursor.execute("DELETE FROM tags WHERE user = :id", {"id": user_id})
             cursor.execute("DELETE FROM recipes WHERE user = :id", {"id": user_id})
             conn.commit()
-
-if __name__ == '__main__':
-    db_maintainer = DbMaintainer("./db/")
-    db_maintainer.get_filtered([], "Супы", 339569354)

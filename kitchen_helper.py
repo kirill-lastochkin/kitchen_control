@@ -21,10 +21,6 @@ class KitchenHelper:
         print("Random week menu requested for user", user_id)
         return self.menu_generator.generate_menu_week(user_id, self.user_dir(user_id), self.menu_generator_config)
 
-    def create_menu_day(self, user_id):
-        print("Random day menu requested for user", user_id)
-        return self.menu_generator.generate_menu_day(user_id)
-
     def get_dish(self, user_id):
         print("Random dish requested for user", user_id)
         return self.menu_generator.generate_dish(user_id)
@@ -101,7 +97,6 @@ class KitchenHelper:
 
     def init_bot(self):
         actions = { 'menu_week': self.create_menu_week,
-                    'menu_day': self.create_menu_day,
                     'menu_dish': self.get_dish,
                     'db_update': self.process_db_update,
                     'new_user': self.user_appeared }
