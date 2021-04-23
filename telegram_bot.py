@@ -56,7 +56,7 @@ class KitchenHelperBot:
         menu_parts = self.actions['menu_week'](user_id)
 
         for part in menu_parts:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.MARKDOWN)
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.HTML)
 
     def menu_day_cb(self, update, context):
         user_id = update.message.from_user['id']

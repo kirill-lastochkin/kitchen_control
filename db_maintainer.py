@@ -29,8 +29,7 @@ class DbMaintainer:
         with sqlite3.connect(self.name) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
-            recipe_tags = cursor.fetchall()
-            random_recipe_id = random.choice(recipe_tags)
+            random_recipe_id = random.choice(cursor.fetchall())
 
             cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ?", random_recipe_id)
             title, ingridients, cooking_time, instruction, portions, url = cursor.fetchall().pop()
@@ -45,12 +44,20 @@ class DbMaintainer:
     def get_filtered(self, tags, category, user_id):
         with sqlite3.connect(self.name) as conn:
             cursor = conn.cursor()
-            tag_ids = self.get_tag_ids_by_name(tags, user_id, cursor)
+
             category_id = self.get_category_id_by_name(category, user_id, cursor)
-            recipe_ids = self.get_recipe_ids_by_tags(tag_ids, cursor)
+            recipe_ids = []
+
+            if tags:
+                tag_ids = self.get_tag_ids_by_name(tags, user_id, cursor)
+                recipe_ids = self.get_recipe_ids_by_tags(tag_ids, cursor)
+            else:
+                cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
+                for r in cursor.fetchall():
+                    recipe_ids.append(r[0])
 
             matched_recipes = []
-            if not tag_ids or not category_id or not recipe_ids:
+            if not category_id or not recipe_ids:
                 return matched_recipes
 
             for recipe_id in recipe_ids:
@@ -68,7 +75,6 @@ class DbMaintainer:
                     continue
 
             return matched_recipes
-
 
     def get_tag_ids_by_name(self, tags, user_id, cursor):
         sql_args = [user_id, ]

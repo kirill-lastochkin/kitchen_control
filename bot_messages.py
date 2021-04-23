@@ -44,7 +44,7 @@ def repeating_dish(dish):
     return "Вчерашнее: {}\n".format(dish)
 
 def bold(text):
-    return "*{}*".format(text)
+    return "<b>{}</b>".format(text)
 
 def italic(text):
-    return "_{}_".format(text)
+    return "<i>{}</i>".format(text)
