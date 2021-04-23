@@ -58,8 +58,9 @@ class KitchenHelperBot:
 
     def menu_dish_cb(self, update, context):
         user_id = update.message.from_user['id']
-        menu_parts = self.actions['menu_dish'](user_id)
+        keywords = context.args
 
+        menu_parts = self.actions['menu_dish'](user_id, keywords)
         for part in menu_parts:
             context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
@@ -96,7 +97,7 @@ class KitchenHelperBot:
 
 if __name__ == '__main__':
     actions = { 'menu_week': lambda user_id: "Empty week menu",
-                'menu_dish': lambda user_id: "Empty dish",
+                'menu_dish': lambda user_id, keywords: "Empty dish",
                 'db_update': lambda db_file_path, user_id: print("DB updated:", db_file_path),
                 'new_user': lambda user_id: print("New user with ID:", user_id) }
 

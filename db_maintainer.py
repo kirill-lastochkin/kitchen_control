@@ -24,43 +24,32 @@ class DbMaintainer:
             cursor.execute("CREATE TABLE recipe_to_tags (recipe integer, tag integer)")
             conn.commit()
 
-    def get_random_recipe(self, user_id):
-        random.seed()
-        with sqlite3.connect(self.name) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT id FROM recipes WHERE user = :id", {"id": user_id})
-            random_recipe_id = random.choice(cursor.fetchall())
-
-            cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ?", random_recipe_id)
-            title, ingridients, cooking_time, instruction, portions, url = cursor.fetchall().pop()
-
-            return { "title": title,
-                     "ingridients": ingridients,
-                     "cooking_time": cooking_time,
-                     "instruction": instruction,
-                     "portions": portions,
-                     "url": url }
-
-    def get_filtered(self, tags, category, user_id):
+    def get_filtered(self, tags, category, user_id, allow_empty_category=False):
         with sqlite3.connect(self.name) as conn:
             cursor = conn.cursor()
 
             recipe_ids = self.get_recipe_ids(tags, user_id, cursor)
             category_id = self.get_category_id_by_name(category, user_id, cursor)
             
-            if not category_id or not recipe_ids:
+            if (not category_id and not allow_empty_category) or not recipe_ids:
                 return []
 
             matched_recipes = []
             for recipe_id in recipe_ids:
-                cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ? AND category = ?", (recipe_id, category_id))
+                if category_id:
+                    cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ? AND category = ?",
+                                  (recipe_id, category_id))
+                else:
+                    cursor.execute("SELECT title, ingridients, cooking_time, instruction, portions, url FROM recipes WHERE id = ?",
+                                  (recipe_id,))
+
                 try:
                     title, ingridients, cooking_time, instruction, portions, url = cursor.fetchall().pop()
                     matched_recipes.append({ "title": title,
                                              "id": recipe_id,
                                              "ingridients": ingridients,
                                              "cooking_time": cooking_time,
-                                             #"instruction": instruction,
+                                             "instruction": instruction,
                                              "portions": portions,
                                              "url": url })
                 except IndexError:
@@ -120,6 +109,26 @@ class DbMaintainer:
         try:
             return cursor.fetchall()[0][0]
         except IndexError:
+            return None
+
+    def tag(self, tag, user_id):
+        with sqlite3.connect(self.name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT tag FROM tags WHERE user = ?", (user_id,))
+            tags = cursor.fetchall()
+            for t in tags:
+                if t[0].lower() == tag.lower():
+                    return t[0]
+            return None
+
+    def category(self, category, user_id):
+        with sqlite3.connect(self.name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT category FROM categories WHERE user = ?", (user_id,))
+            categories = cursor.fetchall()
+            for c in categories:
+                if c[0].lower() == category.lower():
+                    return c[0]
             return None
 
     def update_db(self, data, user_id):

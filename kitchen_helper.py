@@ -21,9 +21,9 @@ class KitchenHelper:
         print("Random week menu requested for user", user_id)
         return self.menu_generator.generate_menu_week(user_id, self.user_dir(user_id), self.menu_generator_config)
 
-    def get_dish(self, user_id):
+    def get_dish(self, user_id, keywords):
         print("Random dish requested for user", user_id)
-        return self.menu_generator.generate_dish(user_id)
+        return self.menu_generator.generate_dish(user_id, keywords)
 
     def process_db_update(self, db_filename, user_id):
         print("DB update requested for user", user_id)
