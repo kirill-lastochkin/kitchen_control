@@ -122,7 +122,7 @@ class MenuGenerator:
             category = self.db_maintainer.category(key, user_id)
             if category: break
 
-        return { "tags": tags, "category": category }
+        return { "tags": list(set(tags)), "category": category }
 
 
     def last_menu_used_recipes(self, last_menu_filepath):

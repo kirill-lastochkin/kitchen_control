@@ -117,7 +117,7 @@ class DbMaintainer:
             cursor.execute("SELECT tag FROM tags WHERE user = ?", (user_id,))
             tags = cursor.fetchall()
             for t in tags:
-                if t[0].lower() == tag.lower():
+                if tag.lower() in t[0].lower():
                     return t[0]
             return None
 
@@ -127,7 +127,7 @@ class DbMaintainer:
             cursor.execute("SELECT category FROM categories WHERE user = ?", (user_id,))
             categories = cursor.fetchall()
             for c in categories:
-                if c[0].lower() == category.lower():
+                if category.lower() in c[0].lower():
                     return c[0]
             return None
 
