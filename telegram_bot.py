@@ -16,6 +16,7 @@ class KitchenHelperBot:
         self.db_filename = db_filename
         self.db_file_ext = db_file_ext
         self.actions = actions
+        self.wait_filters = False
 
     def start(self):
         self.updater = Updater(token=bot_token.token())
@@ -28,9 +29,25 @@ class KitchenHelperBot:
         dispatcher.add_handler(CommandHandler('kill', self.kill_cb))
 
         dispatcher.add_handler(MessageHandler(Filters.document.file_extension(self.db_file_ext), self.db_update_cb))
-        dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), self.help_cb))
+        dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), self.unfiltered_text_cb))
 
         self.updater.start_polling()
+
+    def unfiltered_text_cb(self, update, context):
+        if not self.wait_filters:
+            self.help_cb(update, context)
+            return
+
+        self.filters_received(update, context)
+
+    def filters_received(self, update, context):
+        self.wait_filters = False
+        user_id = update.message.from_user['id']
+        keywords_text = update.message.text
+
+        menu_parts = self.actions['menu_dish'](user_id, keywords_text)
+        for part in menu_parts:
+            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
     def stop(self):
         self.updater.stop()
@@ -48,23 +65,23 @@ class KitchenHelperBot:
 
         user_id = update.message.from_user['id']
         self.actions['new_user'](user_id)
+        self.wait_filters = False
 
     def menu_week_cb(self, update, context):
         user_id = update.message.from_user['id']
         menu_parts = self.actions['menu_week'](user_id)
+        self.wait_filters = False
 
         for part in menu_parts:
             context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.HTML)
 
     def menu_dish_cb(self, update, context):
         user_id = update.message.from_user['id']
-        keywords = context.args
-
-        menu_parts = self.actions['menu_dish'](user_id, keywords)
-        for part in menu_parts:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=part)
+        self.wait_filters = True
+        context.bot.send_message(chat_id=update.effective_chat.id, text=bm.wait_for_filters())
 
     def db_update_cb(self, update, context):
+        self.wait_filters = False
         user_id = update.message.from_user['id']
         file = context.bot.getFile(update.message.document.file_id)
         saved_filename = file.download(self.db_filename)
@@ -75,7 +92,8 @@ class KitchenHelperBot:
             context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_update_fail(result["error"]))
 
     def help_cb(self, update, context):
-        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help())
+        self.wait_filters = False
+        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), parse_mode=ParseMode.HTML)
 
     def kill_cb(self, update, context):
         print("Got kill command!")

@@ -98,11 +98,21 @@ class MenuGenerator:
     def empty_dish(self):
         return { "empty": True }
 
-    def generate_dish(self, user_id, keywords):
+    def generate_dish(self, user_id, keywords_text):
         random.seed()
+        keywords = [keywords_text, ]
         parsed = self.parse_dish_keywords(user_id, keywords)
+        if not parsed["tags"] and not parsed["category"]:
+            keywords = keywords_text.split()
+            parsed = self.parse_dish_keywords(user_id, keywords)
+
+            if not parsed["tags"] and not parsed["category"]:
+                return (bm.dishes_not_found(),)
 
         matched_recipes = self.db_maintainer.get_filtered(parsed["tags"], parsed["category"], user_id, True)
+        if not matched_recipes:
+            return (bm.dishes_not_found(),)
+
         recipe = random.choice(matched_recipes)
 
         title_part = self.get_recipe_full_desc(recipe)
