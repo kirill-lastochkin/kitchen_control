@@ -95,11 +95,23 @@ class KitchenHelper:
         for file in os.listdir(data_dir):
             shutil.rmtree(data_dir + file)
 
+    def add_forbidden_ingridient(self, user_id, ingridient):
+        self.menu_generator.add_unused_ingridient(ingridient, self.user_dir(user_id))
+
+    def del_forbidden_ingridient(self, user_id, ingridient):
+        self.menu_generator.del_unused_ingridient(ingridient, self.user_dir(user_id))
+
+    def list_forbidden_ingridients(self, user_id):
+        return self.menu_generator.list_unused_ingridients(self.user_dir(user_id))
+
     def init_bot(self):
         actions = { 'menu_week': self.create_menu_week,
                     'menu_dish': self.get_dish,
                     'db_update': self.process_db_update,
-                    'new_user': self.user_appeared }
+                    'new_user': self.user_appeared,
+                    'add_forbidden': self.add_forbidden_ingridient,
+                    'del_forbidden': self.del_forbidden_ingridient,
+                    'list_forbidden': self.list_forbidden_ingridients }
 
         self.bot = KitchenHelperBot(actions, self.db_update_path)
 

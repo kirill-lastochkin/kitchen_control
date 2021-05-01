@@ -59,3 +59,21 @@ def wait_for_filters():
 
 def dishes_not_found():
     return "Ниче не нашел :("
+
+def forbidden_ingridient_added():
+    return "Больше он вас не побеспокоит!"
+
+def forbidden_ingridient_removed():
+    return "Ингридиент снова в строю!"
+
+def add_forbidden_ingridient_wait():
+    return "Какой ингридиент исключить?"
+
+def del_forbidden_ingridient_wait():
+    return "Какой ингридиент вернуть?"
+
+def all():
+    return "Все"
+
+def list_empty():
+    return "Список пуст..."
