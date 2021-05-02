@@ -36,6 +36,40 @@ class KitchenHelperBot:
 
         self.updater.start_polling()
 
+    def stop(self):
+        self.updater.stop()
+        self.updater.is_idle = False
+
+    # Common callbacks section
+
+    def start_cb(self, update, context):
+        main_menu_keyboard = [KeyboardButton('/menu_week'),
+                              KeyboardButton('/list_forbidden'),
+                              KeyboardButton('/menu_dish'),
+                              KeyboardButton('/help')]
+
+        reply_kb_markup = ReplyKeyboardMarkup.from_row(main_menu_keyboard, resize_keyboard=True, one_time_keyboard=False)
+
+        context.bot.send_message(chat_id=update.message.chat_id, text=bm.hello())
+        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), reply_markup=reply_kb_markup, parse_mode=ParseMode.HTML)
+
+        user_id = update.message.from_user['id']
+        self.actions['new_user'](user_id)
+        self.process_command_args = None
+
+    def unfiltered_text_cb(self, update, context):
+        if not self.process_command_args:
+            self.help_cb(update, context)
+            return
+
+        self.process_command_args(update, context)
+
+    def help_cb(self, update, context):
+        self.process_command_args = None
+        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), parse_mode=ParseMode.HTML)
+
+    # Work with forbidden ingridients section
+
     def add_forbidden_cb(self, update, context):
         self.process_command_args = self.forbidden_received
         context.bot.send_message(chat_id=update.effective_chat.id, text=bm.add_forbidden_ingridient_wait())
@@ -65,12 +99,11 @@ class KitchenHelperBot:
         if ingridients == "": ingridients = bm.list_empty()
         context.bot.send_message(chat_id=update.effective_chat.id, text=ingridients)
 
-    def unfiltered_text_cb(self, update, context):
-        if not self.process_command_args:
-            self.help_cb(update, context)
-            return
+    # Random dish section
 
-        self.process_command_args(update, context)
+    def menu_dish_cb(self, update, context):
+        self.process_command_args = self.filters_received
+        context.bot.send_message(chat_id=update.effective_chat.id, text=bm.wait_for_filters())
 
     def filters_received(self, update, context):
         self.process_command_args = None
@@ -81,24 +114,7 @@ class KitchenHelperBot:
         for part in menu_parts:
             context.bot.send_message(chat_id=update.effective_chat.id, text=part)
 
-    def stop(self):
-        self.updater.stop()
-        self.updater.is_idle = False
-
-    def start_cb(self, update, context):
-        main_menu_keyboard = [KeyboardButton('/menu_week'),
-                              KeyboardButton('/list_forbidden'),
-                              KeyboardButton('/menu_dish'),
-                              KeyboardButton('/help')]
-
-        reply_kb_markup = ReplyKeyboardMarkup.from_row(main_menu_keyboard, resize_keyboard=True, one_time_keyboard=False)
-
-        context.bot.sendMessage(chat_id=update.message.chat_id, text=bm.hello())
-        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), reply_markup=reply_kb_markup, parse_mode=ParseMode.HTML)
-
-        user_id = update.message.from_user['id']
-        self.actions['new_user'](user_id)
-        self.process_command_args = None
+    # Week menu generation section
 
     def menu_week_cb(self, update, context):
         user_id = update.message.from_user['id']
@@ -108,9 +124,7 @@ class KitchenHelperBot:
         for part in menu_parts:
             context.bot.send_message(chat_id=update.effective_chat.id, text=part, parse_mode=ParseMode.HTML)
 
-    def menu_dish_cb(self, update, context):
-        self.process_command_args = self.filters_received
-        context.bot.send_message(chat_id=update.effective_chat.id, text=bm.wait_for_filters())
+    # DB updating section
 
     def db_update_cb(self, update, context):
         self.process_command_args = None
@@ -118,14 +132,11 @@ class KitchenHelperBot:
         file = context.bot.getFile(update.message.document.file_id)
         saved_filename = file.download(self.db_filename)
         result = self.actions['db_update'](saved_filename, user_id)
-        if result["result"]:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_updated())
-        else:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_update_fail(result["error"]))
 
-    def help_cb(self, update, context):
-        self.process_command_args = None
-        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), parse_mode=ParseMode.HTML)
+        if result["result"]: context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_updated())
+        else: context.bot.send_message(chat_id=update.effective_chat.id, text=bm.db_update_fail(result["error"]))
+
+    # Finishing bot section
 
     def kill_cb(self, update, context):
         print("Got kill command!")
@@ -137,21 +148,5 @@ class KitchenHelperBot:
         except:
             return
 
-        #context.bot.send_message(chat_id=update.message.chat_id, text="No!")
-        #time.sleep(1)
-        #context.bot.send_message(chat_id=update.message.chat_id, text="No, please!")
-        #time.sleep(1)
         context.bot.send_message(chat_id=update.message.chat_id, text="Bot was executed.")
         threading.Thread(target=self.stop).start()
-
-
-if __name__ == '__main__':
-    actions = { 'menu_week': lambda user_id: "Empty week menu",
-                'menu_dish': lambda user_id, keywords: "Empty dish",
-                'db_update': lambda db_file_path, user_id: print("DB updated:", db_file_path),
-                'new_user': lambda user_id: print("New user with ID:", user_id) }
-
-    default_db_filename = './updated_db.zip'
-
-    bot = KitchenHelperBot(actions, default_db_filename)
-    bot.start()
