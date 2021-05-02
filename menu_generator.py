@@ -14,6 +14,8 @@ class MenuGenerator:
         random.seed()
         menu_week = []
 
+        unused_ingridients = self.unused_ingridients_list(working_dir)
+
         with open(working_dir + config_file, 'r', encoding='utf-8') as json_file:
             used_recipes = self.last_menu_used_recipes(working_dir + self.last_menu_file)
             day_idx = 0
@@ -42,8 +44,10 @@ class MenuGenerator:
                         self.chosen_recipe = random.choice(candidate_recipes)
 
                         ingridients_ok = True
-                        if self.chosen_recipe["ingridients"]:
-                            ingridients_ok = not self.ingridients_list_contains_unused(self.chosen_recipe["ingridients"], working_dir)
+                        if self.chosen_recipe["ingridients"] and unused_ingridients:
+                            for ingridient in unused_ingridients:
+                                if ingridient in self.chosen_recipe["ingridients"]:
+                                    ingridients_ok = False
 
                         if self.chosen_recipe["id"] not in used_recipes and ingridients_ok:
                             menu_day.append(self.chosen_recipe)
@@ -189,7 +193,9 @@ class MenuGenerator:
             with open(config_file, 'r', encoding='utf-8') as config:
                 unused_ingridients = json.load(config)
 
-        unused_ingridients.append(ingridient)
+        for i in ingridient.split():
+            unused_ingridients.append(i)
+
         self.dump_data(config_file, list(set(unused_ingridients)))
 
     def del_unused_ingridient(self, ingridient, working_dir):
@@ -201,30 +207,23 @@ class MenuGenerator:
                     unused_ingridients = []
                 else:
                     unused_ingridients = json.load(config)
-                    unused_ingridients.remove(ingridient)
+                    for i in ingridient.split():
+                        unused_ingridients.remove(i)
 
             self.dump_data(config_file, unused_ingridients)
 
     def list_unused_ingridients(self, working_dir):
+        unused_ingridients = self.unused_ingridients_list(working_dir)
         resurt_list = ""
-        config_file = working_dir + self.unused_ingridients_file
-
-        if os.path.exists(config_file):
-            with open(config_file, 'r', encoding='utf-8') as config:
-                unused_ingridients = json.load(config)
-                for ingridient in unused_ingridients:
-                    resurt_list += str(ingridient) + "\n"
-
+        for ingridient in unused_ingridients:
+            resurt_list += str(ingridient) + "\n"
         return resurt_list
 
-    def ingridients_list_contains_unused(self, ingridients_list, working_dir):
+    def unused_ingridients_list(self, working_dir):
         config_file = working_dir + self.unused_ingridients_file
 
         if os.path.exists(config_file):
             with open(config_file, 'r', encoding='utf-8') as config:
-                unused_ingridients = json.load(config)
-                for ingridient in unused_ingridients:
-                    if ingridient in ingridients_list:
-                        return True
+                return json.load(config)
 
-        return False
+        return []

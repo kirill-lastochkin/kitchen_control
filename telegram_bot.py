@@ -87,13 +87,14 @@ class KitchenHelperBot:
 
     def start_cb(self, update, context):
         main_menu_keyboard = [KeyboardButton('/menu_week'),
+                              KeyboardButton('/list_forbidden'),
                               KeyboardButton('/menu_dish'),
                               KeyboardButton('/help')]
 
         reply_kb_markup = ReplyKeyboardMarkup.from_row(main_menu_keyboard, resize_keyboard=True, one_time_keyboard=False)
 
         context.bot.sendMessage(chat_id=update.message.chat_id, text=bm.hello())
-        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), reply_markup=reply_kb_markup)
+        context.bot.send_message(chat_id=update.message.chat_id, text=bm.help(), reply_markup=reply_kb_markup, parse_mode=ParseMode.HTML)
 
         user_id = update.message.from_user['id']
         self.actions['new_user'](user_id)
