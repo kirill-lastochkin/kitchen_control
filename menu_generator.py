@@ -46,7 +46,8 @@ class MenuGenerator:
                         ingridients_ok = True
                         if self.chosen_recipe["ingridients"] and unused_ingridients:
                             for ingridient in unused_ingridients:
-                                if ingridient in self.chosen_recipe["ingridients"]:
+                                if ingridient.lower() in self.chosen_recipe["ingridients"].lower() or\
+                                   ingridient.lower() in self.chosen_recipe["title"].lower():
                                     ingridients_ok = False
 
                         if self.chosen_recipe["id"] not in used_recipes and ingridients_ok:
